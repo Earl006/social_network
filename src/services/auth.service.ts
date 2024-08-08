@@ -68,10 +68,10 @@ export class AuthService {
         return updatedUser;
     }
 
-    async editProfile(email: string, data: Partial<User>) {
+    async editProfile(userId: string, data: Partial<User>) {
         const user = await prisma.user.findUnique({
             where: {
-                email
+                id: userId
             }
         });
         if (!user) {
@@ -79,7 +79,7 @@ export class AuthService {
         }
         const updatedUser = await prisma.user.update({
             where: {
-                email
+                id: userId
             },
             data
         });
@@ -87,10 +87,10 @@ export class AuthService {
         return updatedUser;
     }
 
-    async editProfilePicture(email: string, picture: Express.Multer.File) {
+    async editProfilePicture(userId: string, picture: Express.Multer.File) {
         const user = await prisma.user.findUnique({
             where: {
-                email
+                id: userId
             }
         });
         if (!user) {
@@ -99,7 +99,7 @@ export class AuthService {
         const avatarUrl = await uploadToCloudinary(picture);
         const updatedUser= await prisma.user.update({
             where: {
-                email
+                id: userId
             },
             data: {
                 avatarUrl

@@ -1,0 +1,53 @@
+###CREATE AN ACCOUNT 
+POST http://localhost:3000/api/auth/create
+Content-Type: application/json
+
+{
+    "email": "earljoe06@gmail.com",
+    "firstName": "Earl",
+    "lastName": "Joe",
+    "password": "password"
+}
+
+###LOGIN
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "earljoe06@gmail.com",
+    "password": "password"
+}
+
+###CHANGE PASSWORD
+POST http://localhost:3000/api/auth/change-password
+Content-Type: application/json
+
+{
+    "email": "earljoe06@gmail.com",
+    "oldPassword": "password",
+    "newPassword": "password123"
+}
+
+###EDIT PROFILE(*UPDATE**)
+PUT http://localhost:3000/api/auth/edit-profile/43d19826-aa75-42ab-8bd5-e5f8dd7d5449
+Content-Type: application/json
+
+{
+    "email": "earljoe06@gmail.com",
+    "firstName": "John",
+    "lastName": "Doe"
+}
+
+###EDIT PROFILE PICTURE
+PATCH http://localhost:3000/api/auth/edit-profile-picture/43d19826-aa75-42ab-8bd5-e5f8dd7d5449
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="ase.jpeg"
+Content-Type: image/jpeg
+
+< /home/earljoe/Downloads/ase.jpeg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+

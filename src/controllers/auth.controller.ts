@@ -43,7 +43,7 @@ export class AuthController {
 
     async editProfile(req: Request, res: Response) {
         try{
-            const user = await authService.editProfile(req.body.email, req.body.data);
+            const user = await authService.editProfile(req.params.userId, req.body.data);
             res.status(200).json(user);
         } catch (error: any) {
             res.status(400).json({ message: error.message || error });
@@ -53,13 +53,13 @@ export class AuthController {
     async editProfilePicture(req: Request, res: Response) {
         try{
             if (req.file) {
-                const user = await authService.editProfilePicture(req.body.email, req.file);
+                const user = await authService.editProfilePicture(req.params.userId, req.file);
                 res.status(200).json(user);
             } else {
                 throw new Error('File is missing');
             }
         } catch (error: any) {
-            res.status(400).json({ message: "Failed to update profile picture" });
+            res.status(400).json({ message: error.message || error });
         }
     
     }
