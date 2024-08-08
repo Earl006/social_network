@@ -2,6 +2,9 @@ import { generateToken, verifyToken } from "../utils/jwt.utils";
 import { User, PrismaClient } from "@prisma/client";
 import {v4 as uuidv4} from 'uuid';
 import bcryptjs from 'bcryptjs';
+import sendMail from "../bg-services/mail.service";
+import path from 'path';
+import { uploadToCloudinary } from "../bg-services/cloudinary.service";
 
 const prisma = new PrismaClient();
 
@@ -12,6 +15,15 @@ export class AuthService {
                 ...data,
                 password: bcryptjs.hashSync(data.password, 10),
                 id: uuidv4()
+            }
+        });
+        const templatePath = path.join(__dirname, '../mails/welcome.mail.ejs');
+        await sendMail({
+            email: user.email,
+            subject: 'Welcome to our platform',
+            template: templatePath,
+            body: {
+               user,
             }
         });
         return user;
@@ -53,6 +65,7 @@ export class AuthService {
                 password: bcryptjs.hashSync(newPassword, 10)
             }
         });
+        return updatedUser;
     }
 
     async editProfile(email: string, data: Partial<User>) {
@@ -69,6 +82,28 @@ export class AuthService {
                 email
             },
             data
+        });
+
+        return updatedUser;
+    }
+
+    async editProfilePicture(email: string, picture: Express.Multer.File) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const avatarUrl = await uploadToCloudinary(picture);
+        const updatedUser= await prisma.user.update({
+            where: {
+                email
+            },
+            data: {
+                avatarUrl
+            }
         });
 
         return updatedUser;
